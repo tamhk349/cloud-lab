@@ -18,6 +18,8 @@ RUN npm run build
 
 # Sử dụng Nginx nhẹ để chạy file tĩnh sản phẩm (Production)
 FROM nginx:alpine
+# Ghi đè file cấu hình Nginx để proxy API /api/ sang backend
+COPY default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
