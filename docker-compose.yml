@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./mern-demo
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGODB_URI=mongodb+srv://admin:123456789abc@cluster0.ep6p6zs.mongodb.net/cloud_lab?retryWrites=true&w=majority
+
+  frontend:
+    build: ./mern-demo/client
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
