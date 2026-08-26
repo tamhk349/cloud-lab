@@ -1,27 +1,25 @@
 services:
-  # 1. Database Mongo
   mongo:
     image: mongo:latest
-    container_name: cloud-lab-mongo
+    container_name: mern-mongo
     ports:
       - "27017:27017"
 
-  # 2. Backend Server
   backend:
-    build: ./mern-demo/server
-    container_name: cloud-lab-backend
+    build: ../mern-demo/server
+    container_name: mern-backend
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
-      - MONGO_URI=mongodb://mongo:27017/mern_db
       - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/cloud_lab
+      - MONGO_URI=mongodb://mongo:27017/cloud_lab
     depends_on:
       - mongo
 
-  # 3. Frontend Client
   frontend:
-    build: ./mern-demo/client
-    container_name: cloud-lab-frontend
+    build: ../mern-demo/client
+    container_name: mern-frontend
     ports:
       - "3000:80"
     depends_on:

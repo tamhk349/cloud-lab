@@ -8,15 +8,18 @@ const Student = require('./models/Student');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// BẮT BUỘC PHẢI CÓ 2 DÒNG NÀY ĐỂ ĐỌC BODY VÀ KHÔNG BỊ CHẶN CORS
 app.use(cors());
 app.use(express.json());
+
+const MONGODB_URI = "mongodb+srv://tamhk349_db_user:bCPtkSQQt96BgAEi@cluster0.ep6p6zs.mongodb.net/cloud_lab?retryWrites=true&w=majority";
 
 // API Kiểm tra
 app.get('/api/hello', (req, res) => {
     res.json({ message: "Backend MERN đang hoạt động thành công!" });
 });
 
-// Câu 36: GET /api/students - Lấy danh sách sinh viên
+// GET /api/students - Lấy danh sách sinh viên
 app.get('/api/students', async (req, res) => {
     try {
         const students = await Student.find();
@@ -26,7 +29,7 @@ app.get('/api/students', async (req, res) => {
     }
 });
 
-// Câu 37: POST /api/students - Thêm sinh viên mới
+// POST /api/students - Thêm sinh viên mới
 app.post('/api/students', async (req, res) => {
     try {
         const { studentId, name, email } = req.body;
@@ -37,7 +40,7 @@ app.post('/api/students', async (req, res) => {
     }
 });
 
-// Câu 38: PUT /api/students/:id - Cập nhật thông tin sinh viên theo ID
+// PUT /api/students/:id - Cập nhật thông tin sinh viên theo ID
 app.put('/api/students/:id', async (req, res) => {
     try {
         const updatedStudent = await Student.findByIdAndUpdate(
@@ -51,7 +54,7 @@ app.put('/api/students/:id', async (req, res) => {
     }
 });
 
-// Câu 39: DELETE /api/students/:id - Xóa sinh viên theo ID
+// DELETE /api/students/:id - Xóa sinh viên theo ID
 app.delete('/api/students/:id', async (req, res) => {
     try {
         await Student.findByIdAndDelete(req.params.id);
@@ -61,17 +64,12 @@ app.delete('/api/students/:id', async (req, res) => {
     }
 });
 
-async function startServer() {
-    try {
-        await mongoose.connect(process.env.MONGODB_URI);
-        console.log('Kết nối thành công tới MongoDB Atlas!');
+// THỨ TỰ CHUẨN: Đợi DB kết nối thành công rồi mới mở port Server
+mongoose.connect(MONGODB_URI)
+    .then(() => {
+        console.log('🔥 Kết nối thành công tới MongoDB Atlas!');
         app.listen(PORT, () => {
-            console.log(`Server đang chạy tại port: ${PORT}`);
+            console.log(`🚀 Server đang chạy tại port: ${PORT}`);
         });
-    } catch (error) {
-        console.error('Lỗi kết nối MongoDB Atlas:', error.message);
-        process.exitCode = 1;
-    }
-}
-
-startServer();
+    })
+    .catch((error) => console.error('❌ Lỗi kết nối MongoDB:', error.message));

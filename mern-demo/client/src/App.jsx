@@ -10,11 +10,24 @@ function App() {
   // State phục vụ việc Sửa (PUT)
   const [editingId, setEditingId] = useState(null)
 
+  const parseResponse = async (res) => {
+    const contentType = res.headers.get('content-type') || ''
+
+    if (contentType.includes('application/json')) {
+      return res.json()
+    }
+
+    const text = await res.text()
+    throw new Error(text.includes('Bad Gateway')
+      ? 'Khong ket noi duoc backend. Hay kiem tra container backend va MongoDB.'
+      : 'Server tra ve du lieu khong hop le.')
+  }
+
   // Câu 59 & 63: Gọi API GET /api/students để lấy danh sách
   const fetchStudents = async () => {
     try {
       const res = await fetch('/api/students')
-      const data = await res.json()
+      const data = await parseResponse(res)
       if (!res.ok) throw new Error(data.message || 'Không thể tải danh sách sinh viên')
       setStudents(data)
     } catch (err) {
@@ -58,7 +71,7 @@ function App() {
           body: JSON.stringify({ studentId, name, email })
         })
 
-        const data = await res.json()
+        const data = await parseResponse(res)
         if (!res.ok) throw new Error(data.message || 'Không thể cập nhật sinh viên')
 
         setEditingId(null)
@@ -70,7 +83,7 @@ function App() {
           body: JSON.stringify({ studentId, name, email })
         })
 
-        const data = await res.json()
+        const data = await parseResponse(res)
         if (!res.ok) throw new Error(data.message || 'Không thể thêm sinh viên')
       }
 
@@ -92,7 +105,7 @@ function App() {
         const res = await fetch(`/api/students/${id}`, {
           method: 'DELETE'
         })
-        const data = await res.json()
+        const data = await parseResponse(res)
         if (!res.ok) throw new Error(data.message || 'Không thể xóa sinh viên')
 
         await fetchStudents() // Câu 63: Tải lại danh sách sau khi xóa
