@@ -1,19 +1,16 @@
-version: '3.8'
-
 services:
   backend:
-    image: tamhk349/mern-backend:2.0
+    image: ${BACKEND_IMAGE:-tamhk349/mern-backend:1.0}
     container_name: mern-backend-hub
     ports:
-      - "5000:5000"
-    environment:
-      - PORT=5000
-      - MONGODB_URI=mongodb+srv://tamhk349_db_user:bCPtkSQQt96BgAEi@cluster0.ep6p6zs.mongodb.net/cloud_lab?retryWrites=true&w=majority
+      - "${BACKEND_PORT:-5000}:5000"
+    env_file:
+      - .env
 
   frontend:
-    image: tamhk349/mern-frontend:1.0
+    image: ${FRONTEND_IMAGE:-tamhk349/mern-frontend:2.0}
     container_name: mern-frontend-hub
     ports:
-      - "3000:80"
+      - "${FRONTEND_PORT:-80}:80"
     depends_on:
       - backend

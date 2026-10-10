@@ -1,9 +1,9 @@
 services:
   mongo:
-    image: mongo:latest
+    image: mongo:7
     container_name: mern-mongo
-    ports:
-      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
 
   backend:
     build: ../mern-demo/server
@@ -24,3 +24,6 @@ services:
       - "3000:80"
     depends_on:
       - backend
+
+volumes:
+  mongo-data:

@@ -13,7 +13,11 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const MONGODB_URI = "mongodb+srv://tamhk349_db_user:bCPtkSQQt96BgAEi@cluster0.ep6p6zs.mongodb.net/cloud_lab?retryWrites=true&w=majority";
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+    throw new Error('MONGODB_URI environment variable is required');
+}
 
 // API Kiểm tra
 app.get('/api/hello', (req, res) => {
