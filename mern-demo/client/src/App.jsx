@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+
 function App() {
   const [students, setStudents] = useState([])
   const [studentId, setStudentId] = useState('')
@@ -26,7 +28,7 @@ function App() {
   // Câu 59 & 63: Gọi API GET /api/students để lấy danh sách
   const fetchStudents = async () => {
     try {
-      const res = await fetch('/api/students')
+      const res = await fetch(`${API_BASE_URL}/api/students`)
       const data = await parseResponse(res)
       if (!res.ok) throw new Error(data.message || 'Không thể tải danh sách sinh viên')
       setStudents(data)
@@ -65,7 +67,7 @@ function App() {
     try {
       if (editingId) {
         // Câu 61: Gọi API PUT /api/students/:id
-        const res = await fetch(`/api/students/${editingId}`, {
+        const res = await fetch(`${API_BASE_URL}/api/students/${editingId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ studentId, name, email })
@@ -77,7 +79,7 @@ function App() {
         setEditingId(null)
       } else {
         // Câu 60: Gọi API POST /api/students
-        const res = await fetch('/api/students', {
+        const res = await fetch(`${API_BASE_URL}/api/students`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ studentId, name, email })
@@ -102,7 +104,7 @@ function App() {
     if (window.confirm('Bạn có chắc muốn xóa sinh viên này?')) {
       setError('')
       try {
-        const res = await fetch(`/api/students/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/api/students/${id}`, {
           method: 'DELETE'
         })
         const data = await parseResponse(res)
