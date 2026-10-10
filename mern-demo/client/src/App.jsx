@@ -118,8 +118,7 @@ function App() {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>Quản Lý Sinh Viên</h1>
-
+<h1>Quản Lý Sinh Viên - Buổi 6</h1>
       {/* Form nhập/chỉnh sửa thông tin sinh viên */}
       <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
         <input
